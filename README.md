@@ -1,0 +1,2 @@
+# pokemonbattle_autotests_2026
+Тренировочный проект
