@@ -2,15 +2,12 @@ import pytest
 import requests
 from config.settings import BASE_URL, TOKEN
 from pprint import pprint
+from api.client import ApiClient
 
 
 
-def test_get_me_smoke():
-    headers = {
-        "trainer_token": TOKEN
-    }
-
-    response = requests.get(f"{BASE_URL}/me", headers=headers)
+def test_get_me_smoke(api_client):
+    response = api_client.get("/me")
 
     data = response.json()
     trainer = data["data"][0]
@@ -36,14 +33,17 @@ def test_get_me_smoke():
     assert isinstance(trainer["level"], str)
 
 
-def test_get_me_without_token():
-    response = requests.get(f"{BASE_URL}/me")
+def test_get_me_without_token(api_client):
+    response = api_client.get("/me", {})
 
-    # pprint(response.status_code) 
+    pprint(response.status_code)
 
     assert response.status_code in (401,422), "Status code is not 401 or 422"
 
 def test_get_me_without_invalid_token():
+
+
+
     headers = {
         "trainer_token": "invalid_token"
     }
@@ -62,5 +62,3 @@ def test_get_me_wrong_method():
     # pprint(response.status_code)
 
     assert response.status_code == 405, "Status code is not 405"
-
-
