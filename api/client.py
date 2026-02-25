@@ -1,4 +1,5 @@
 import requests
+from config.settings import BASE_URL, TOKEN
 
 class ApiClient:
     def __init__(self, base_url, token):
@@ -8,14 +9,10 @@ class ApiClient:
         }
 
 
-    # def get(self, path):
-    #     return requests.get(f"{self.base_url}{path}", headers=self.headers)
+    def get(self, path, headers = None):
+        final_headers = self.headers.copy()
 
+        if headers is not None:
+            final_headers = headers
+        return requests.get(f"{self.base_url}{path}", headers=final_headers)
 
-    if __name__ == "__main__":
-        client = ApiClient(BASE_URL, TOKEN)
-
-        print(client)
-        print(client.base_url)
-        print(client.token)
-        print(client.__dict__)
