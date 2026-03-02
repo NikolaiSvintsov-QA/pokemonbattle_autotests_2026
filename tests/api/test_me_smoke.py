@@ -1,13 +1,17 @@
+from http.client import responses
+
 import pytest
 import requests
+from docutils.nodes import header
+
 from config.settings import BASE_URL, TOKEN
 from pprint import pprint
 from api.client import ApiClient
+from tests.conftest import unauthorized_client
 
 
-
-def test_get_me_smoke(api_client):
-    response = api_client.get("/me")
+def test_get_me_smoke(authorized_client):
+    response = authorized_client.get("/me")
 
     data = response.json()
     trainer = data["data"][0]
@@ -33,32 +37,19 @@ def test_get_me_smoke(api_client):
     assert isinstance(trainer["level"], str)
 
 
-def test_get_me_without_token(api_client):
-    response = api_client.get("/me", {})
-
-    pprint(response.status_code)
-
-    assert response.status_code in (401,422), "Status code is not 401 or 422"
-
-def test_get_me_without_invalid_token():
-
-
-
-    headers = {
-        "trainer_token": "invalid_token"
-    }
-
-    response = requests.get(f"{BASE_URL}/me", headers=headers)
+def test_get_me_without_token(unauthorized_client):
+    response = unauthorized_client.get("/me")
     # pprint(response.status_code)
 
     assert response.status_code in (401,422), "Status code is not 401 or 422"
 
-def test_get_me_wrong_method():
-    headers = {
-        "trainer_token": TOKEN
-    }
+def test_get_me_without_invalid_token(invalid_token_client):
+    response = invalid_token_client.get("/me")
 
-    response = requests.post(f"{BASE_URL}/me", headers=headers)
+    assert response.status_code in (401,422), "Status code is not 401 or 422"
+
+def test_get_me_wrong_method(authorized_client):
+    response = authorized_client.post("/me")
     # pprint(response.status_code)
 
     assert response.status_code == 405, "Status code is not 405"
