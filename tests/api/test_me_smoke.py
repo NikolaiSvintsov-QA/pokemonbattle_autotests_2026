@@ -1,13 +1,5 @@
-from http.client import responses
-
-import pytest
-import requests
-from docutils.nodes import header
-
-from config.settings import BASE_URL, TOKEN
 from pprint import pprint
-from api.client import ApiClient
-from tests.conftest import unauthorized_client
+
 
 
 def test_get_me_smoke(authorized_client):

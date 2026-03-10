@@ -1,6 +1,9 @@
 import pytest
 from api.client import ApiClient
 from config.settings import BASE_URL,TOKEN
+from config.logger import setup_logger
+
+setup_logger() # включаем логирование
 
 @pytest.fixture
 def authorized_client():
